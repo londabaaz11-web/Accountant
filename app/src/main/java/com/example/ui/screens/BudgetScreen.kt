@@ -182,15 +182,19 @@ fun BudgetScreen(
                             expanded = dropdownExpanded,
                             onDismissRequest = { dropdownExpanded = false }
                         ) {
-                            uiState.categories.filter { it.type == "EXPENSE" }.forEach { cat ->
-                                DropdownMenuItem(
-                                    text = { Text(cat.name) },
-                                    onClick = {
-                                        selectedCategory = cat.name
-                                        dropdownExpanded = false
-                                    }
-                                )
-                            }
+                            uiState.categories
+                                .filter { it.type == "EXPENSE" }
+                                .map { it.name }
+                                .distinct()
+                                .forEach { catName ->
+                                    DropdownMenuItem(
+                                        text = { Text(catName) },
+                                        onClick = {
+                                            selectedCategory = catName
+                                            dropdownExpanded = false
+                                        }
+                                    )
+                                }
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))

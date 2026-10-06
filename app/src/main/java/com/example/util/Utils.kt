@@ -321,6 +321,28 @@ object ExportHelper {
         }
     }
 
+    /**
+     * Creates a full JSON backup file containing all accounts, transactions, budgets, goals, debts, check-ins, and recurring rules.
+     */
+    fun createFullBackupJson(
+        context: Context,
+        backupJsonString: String
+    ): File? {
+        return try {
+            val exportDir = File(context.cacheDir, "exports")
+            if (!exportDir.exists()) exportDir.mkdirs()
+            val backupFile = File(exportDir, "accountability_backup_${System.currentTimeMillis()}.json")
+            val writer = FileWriter(backupFile)
+            writer.write(backupJsonString)
+            writer.flush()
+            writer.close()
+            backupFile
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
     fun shareFile(context: Context, file: File, mimeType: String, title: String) {
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {

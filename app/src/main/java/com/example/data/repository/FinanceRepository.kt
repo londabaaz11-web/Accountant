@@ -85,6 +85,35 @@ class FinanceRepository(private val db: AppDatabase) {
     suspend fun updateRecurring(recurring: RecurringTransaction) = db.recurringTransactionDao().updateRecurring(recurring)
     suspend fun deleteRecurring(recurring: RecurringTransaction) = db.recurringTransactionDao().deleteRecurring(recurring)
 
+    // Full Backup and Restore queries
+    suspend fun getAllAccountsSync() = db.accountDao().getAllAccountsSync()
+    suspend fun getAllCategoriesSync() = db.categoryDao().getAllCategoriesSync()
+    suspend fun getAllBudgetsSync() = db.budgetDao().getAllBudgetsSync()
+    suspend fun getAllGoalsSync() = db.savingsGoalDao().getAllGoalsSync()
+    suspend fun getAllDebtsSync() = db.debtDao().getAllDebtsSync()
+    suspend fun getAllCheckInsSync() = db.dailyCheckInDao().getAllCheckInsSync()
+    suspend fun getAllRecurringSync() = db.recurringTransactionDao().getAllRecurringSync()
+
+    suspend fun restoreBackup(
+        accounts: List<Account>,
+        categories: List<Category>,
+        transactions: List<TransactionEntity>,
+        budgets: List<Budget>,
+        goals: List<SavingsGoal>,
+        debts: List<Debt>,
+        checkIns: List<DailyCheckIn>,
+        recurringList: List<RecurringTransaction>
+    ) {
+        if (accounts.isNotEmpty()) db.accountDao().insertAccounts(accounts)
+        if (categories.isNotEmpty()) db.categoryDao().insertCategories(categories)
+        if (transactions.isNotEmpty()) db.transactionDao().insertTransactions(transactions)
+        if (budgets.isNotEmpty()) db.budgetDao().insertBudgets(budgets)
+        if (goals.isNotEmpty()) db.savingsGoalDao().insertGoals(goals)
+        if (debts.isNotEmpty()) db.debtDao().insertDebts(debts)
+        if (checkIns.isNotEmpty()) db.dailyCheckInDao().insertCheckIns(checkIns)
+        if (recurringList.isNotEmpty()) db.recurringTransactionDao().insertRecurringList(recurringList)
+    }
+
     /**
      * Compute real balances, cash flow, business metrics, and budgets
      */

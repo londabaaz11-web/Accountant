@@ -209,6 +209,31 @@ fun TransactionsScreen(
                         }
                     }
 
+                    // Category Filter Chips (single/deduplicated)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        FilterChip(
+                            selected = selectedCategoryFilter == null,
+                            onClick = { selectedCategoryFilter = null },
+                            label = { Text("All Categories") }
+                        )
+                        uiState.categories.map { it.name }.distinct().forEach { catName ->
+                            FilterChip(
+                                selected = selectedCategoryFilter == catName,
+                                onClick = {
+                                    selectedCategoryFilter = if (selectedCategoryFilter == catName) null else catName
+                                },
+                                label = { Text(catName) }
+                            )
+                        }
+                    }
+
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = "Showing ${filteredTransactions.size} transactions",

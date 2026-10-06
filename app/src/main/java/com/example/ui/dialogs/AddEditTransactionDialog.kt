@@ -281,11 +281,17 @@ fun AddEditTransactionDialog(
                             expanded = categoryDropdownExpanded,
                             onDismissRequest = { categoryDropdownExpanded = false }
                         ) {
-                            categories.forEach { cat ->
+                            val targetType = if (isIncomeType) "INCOME" else "EXPENSE"
+                            val relevantCategories = categories
+                                .filter { it.type == targetType }
+                                .map { it.name }
+                                .distinct()
+                            
+                            relevantCategories.forEach { catName ->
                                 DropdownMenuItem(
-                                    text = { Text(cat.name) },
+                                    text = { Text(catName) },
                                     onClick = {
-                                        selectedCategory = cat.name
+                                        selectedCategory = catName
                                         categoryDropdownExpanded = false
                                     }
                                 )

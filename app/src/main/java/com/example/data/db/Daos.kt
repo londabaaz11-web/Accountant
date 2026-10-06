@@ -21,11 +21,17 @@ interface AccountDao {
     @Query("SELECT * FROM accounts ORDER BY isDefault DESC, name ASC")
     fun getAllAccounts(): Flow<List<Account>>
 
+    @Query("SELECT * FROM accounts")
+    suspend fun getAllAccountsSync(): List<Account>
+
     @Query("SELECT * FROM accounts WHERE id = :id LIMIT 1")
     suspend fun getAccountById(id: Long): Account?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccount(account: Account): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAccounts(accounts: List<Account>)
 
     @Update
     suspend fun updateAccount(account: Account)
@@ -41,6 +47,9 @@ interface AccountDao {
 interface CategoryDao {
     @Query("SELECT * FROM categories ORDER BY name ASC")
     fun getAllCategories(): Flow<List<Category>>
+
+    @Query("SELECT * FROM categories")
+    suspend fun getAllCategoriesSync(): List<Category>
 
     @Query("SELECT * FROM categories WHERE type = :type ORDER BY name ASC")
     fun getCategoriesByType(type: String): Flow<List<Category>>
@@ -75,6 +84,9 @@ interface TransactionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransactions(transactions: List<TransactionEntity>)
+
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity)
 
@@ -96,8 +108,14 @@ interface BudgetDao {
     @Query("SELECT * FROM budgets ORDER BY category ASC")
     fun getAllBudgets(): Flow<List<Budget>>
 
+    @Query("SELECT * FROM budgets")
+    suspend fun getAllBudgetsSync(): List<Budget>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBudget(budget: Budget): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBudgets(budgets: List<Budget>)
 
     @Update
     suspend fun updateBudget(budget: Budget)
@@ -111,8 +129,14 @@ interface SavingsGoalDao {
     @Query("SELECT * FROM savings_goals ORDER BY isCompleted ASC, targetAmount DESC")
     fun getAllGoals(): Flow<List<SavingsGoal>>
 
+    @Query("SELECT * FROM savings_goals")
+    suspend fun getAllGoalsSync(): List<SavingsGoal>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGoal(goal: SavingsGoal): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGoals(goals: List<SavingsGoal>)
 
     @Update
     suspend fun updateGoal(goal: SavingsGoal)
@@ -126,8 +150,14 @@ interface DebtDao {
     @Query("SELECT * FROM debts ORDER BY status ASC, dueDateTimestamp ASC")
     fun getAllDebts(): Flow<List<Debt>>
 
+    @Query("SELECT * FROM debts")
+    suspend fun getAllDebtsSync(): List<Debt>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDebt(debt: Debt): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDebts(debts: List<Debt>)
 
     @Update
     suspend fun updateDebt(debt: Debt)
@@ -141,11 +171,17 @@ interface DailyCheckInDao {
     @Query("SELECT * FROM daily_checkins ORDER BY dateKey DESC")
     fun getAllCheckIns(): Flow<List<DailyCheckIn>>
 
+    @Query("SELECT * FROM daily_checkins")
+    suspend fun getAllCheckInsSync(): List<DailyCheckIn>
+
     @Query("SELECT * FROM daily_checkins WHERE dateKey = :dateKey LIMIT 1")
     suspend fun getCheckInForDate(dateKey: String): DailyCheckIn?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCheckIn(checkIn: DailyCheckIn)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCheckIns(checkIns: List<DailyCheckIn>)
 }
 
 @Dao
@@ -156,8 +192,14 @@ interface RecurringTransactionDao {
     @Query("SELECT * FROM recurring_transactions")
     fun getAllRecurring(): Flow<List<RecurringTransaction>>
 
+    @Query("SELECT * FROM recurring_transactions")
+    suspend fun getAllRecurringSync(): List<RecurringTransaction>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecurring(recurring: RecurringTransaction): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecurringList(list: List<RecurringTransaction>)
 
     @Update
     suspend fun updateRecurring(recurring: RecurringTransaction)
