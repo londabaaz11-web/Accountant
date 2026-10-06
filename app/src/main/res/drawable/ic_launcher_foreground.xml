@@ -3,6 +3,6 @@
     <item
         android:width="66dp"
         android:height="66dp"
-        android:drawable="@drawable/accountability_launcher_icon"
+        android:drawable="@drawable/accountability_logo"
         android:gravity="center" />
 </layer-list>

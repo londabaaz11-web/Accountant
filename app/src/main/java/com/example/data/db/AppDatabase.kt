@@ -95,7 +95,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "accountability_master.db"
+                    "accountability_finance.db"
                 )
                     .addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
@@ -114,18 +114,18 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private suspend fun prepopulateDefaults(db: AppDatabase) {
-            // Default accounts
+            // Default accounts with 0 initial balance
             val cashId = db.accountDao().insertAccount(
-                Account(name = "Cash", type = "Cash", initialBalance = 15000.0, isDefault = true, colorHex = "#10B981")
+                Account(name = "Cash", type = "Cash", initialBalance = 0.0, isDefault = true, colorHex = "#10B981")
             )
             val bankId = db.accountDao().insertAccount(
-                Account(name = "Bank Account", type = "Bank", initialBalance = 45000.0, colorHex = "#3B82F6")
+                Account(name = "Bank Account", type = "Bank", initialBalance = 0.0, colorHex = "#3B82F6")
             )
             db.accountDao().insertAccount(
-                Account(name = "Mobile Wallet", type = "Mobile wallet", initialBalance = 5000.0, colorHex = "#F59E0B")
+                Account(name = "Mobile Wallet", type = "Mobile wallet", initialBalance = 0.0, colorHex = "#F59E0B")
             )
             db.accountDao().insertAccount(
-                Account(name = "Business Account", type = "Business account", initialBalance = 25000.0, colorHex = "#8B5CF6")
+                Account(name = "Business Account", type = "Business account", initialBalance = 0.0, colorHex = "#8B5CF6")
             )
 
             // Default categories
@@ -141,103 +141,11 @@ abstract class AppDatabase : RoomDatabase() {
 
             db.categoryDao().insertCategories(incomeCats + expenseCats)
 
-            // Starter budgets
-            db.budgetDao().insertBudget(Budget(category = "Food", monthlyLimit = 15000.0, monthYear = "ALL"))
-            db.budgetDao().insertBudget(Budget(category = "Transport", monthlyLimit = 10000.0, monthYear = "ALL"))
-            db.budgetDao().insertBudget(Budget(category = "Bills", monthlyLimit = 20000.0, monthYear = "ALL"))
-            db.budgetDao().insertBudget(Budget(category = "Shopping", monthlyLimit = 5000.0, monthYear = "ALL"))
-
-            // Sample starter transactions so user immediately sees rich, interactive data on first install
-            val now = System.currentTimeMillis()
-            val oneDayMs = 24L * 60 * 60 * 1000
-
-            db.transactionDao().insertTransaction(
-                TransactionEntity(
-                    title = "Monthly Salary",
-                    amount = 60000.0,
-                    transactionType = TransactionType.SALARY,
-                    category = "Salary",
-                    accountId = bankId,
-                    dateTimestamp = now - 2 * oneDayMs,
-                    note = "Full-time salary credited"
-                )
-            )
-            db.transactionDao().insertTransaction(
-                TransactionEntity(
-                    title = "Grocery & Food",
-                    amount = 1200.0,
-                    transactionType = TransactionType.EXPENSE,
-                    category = "Food",
-                    accountId = cashId,
-                    dateTimestamp = now - oneDayMs,
-                    note = "Weekly pantry essentials",
-                    accountabilityReason = AccountabilityReason.NECESSARY
-                )
-            )
-            db.transactionDao().insertTransaction(
-                TransactionEntity(
-                    title = "Fuel refill",
-                    amount = 2000.0,
-                    transactionType = TransactionType.EXPENSE,
-                    category = "Fuel",
-                    accountId = cashId,
-                    dateTimestamp = now - 12 * 3600 * 1000,
-                    note = "Bike fuel refill",
-                    accountabilityReason = AccountabilityReason.PLANNED
-                )
-            )
-            db.transactionDao().insertTransaction(
-                TransactionEntity(
-                    title = "Design Consultation Sale",
-                    amount = 5000.0,
-                    transactionType = TransactionType.SALE,
-                    category = "Sales",
-                    accountId = bankId,
-                    dateTimestamp = now - 4 * 3600 * 1000,
-                    note = "Freelance UI work completed",
-                    productName = "Landing Page Design",
-                    quantity = 1.0,
-                    unitPrice = 5000.0,
-                    customerOrSupplierName = "Client Acme",
-                    isBusiness = true
-                )
-            )
-
-            // Starter savings goal
-            db.savingsGoalDao().insertGoal(
-                SavingsGoal(
-                    title = "Emergency Fund",
-                    targetAmount = 100000.0,
-                    savedAmount = 35000.0,
-                    notes = "3 months living expense buffer"
-                )
-            )
-            db.savingsGoalDao().insertGoal(
-                SavingsGoal(
-                    title = "New Laptop",
-                    targetAmount = 150000.0,
-                    savedAmount = 65000.0,
-                    notes = "Target for work upgrade"
-                )
-            )
-
-            // Starter debts
-            db.debtDao().insertDebt(
-                Debt(
-                    personName = "Ali Raza",
-                    amount = 8000.0,
-                    debtType = DebtType.OWED_TO_ME,
-                    notes = "Lent for vehicle repair"
-                )
-            )
-            db.debtDao().insertDebt(
-                Debt(
-                    personName = "Shopkeeper Store",
-                    amount = 2500.0,
-                    debtType = DebtType.I_OWE,
-                    notes = "Monthly store tab"
-                )
-            )
+            // Budgets with 0 limit
+            db.budgetDao().insertBudget(Budget(category = "Food", monthlyLimit = 0.0, monthYear = "ALL"))
+            db.budgetDao().insertBudget(Budget(category = "Transport", monthlyLimit = 0.0, monthYear = "ALL"))
+            db.budgetDao().insertBudget(Budget(category = "Bills", monthlyLimit = 0.0, monthYear = "ALL"))
+            db.budgetDao().insertBudget(Budget(category = "Shopping", monthlyLimit = 0.0, monthYear = "ALL"))
         }
     }
 }
